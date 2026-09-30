@@ -1,0 +1,38 @@
+# Continuous Integration: runs the test suite on every push and pull request,
+# so a green check on the repo proves the tests pass on a clean machine
+# (not just on the author's laptop).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # The README requires Node 18+; test the oldest supported and a current LTS.
+        node-version: [18, 20]
+
+    defaults:
+      run:
+        # The project lives in the task-api/ subfolder.
+        working-directory: task-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: task-api/package-lock.json
+
+      # `npm ci` installs exactly what package-lock.json specifies (reproducible).
+      - run: npm ci
+
+      # Runs the tests AND prints the coverage table in the job log.
+      - run: npm run coverage
