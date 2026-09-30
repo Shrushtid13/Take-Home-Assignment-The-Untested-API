@@ -11,13 +11,10 @@
 | CI | `.github/workflows/ci.yml` runs the tests + coverage on Node 18 and 20 for every push |
 
 ## Coverage (`npm run coverage`)
-```
-All files        |   98.84 |    96.46 |   96.96 |   98.71
- app.js          |    87.5 |    84.61 |      50 |    87.5   (only the app.listen() block, which only runs via `npm start`)
- routes/tasks.js |     100 |      100 |     100 |     100
- taskService.js  |     100 |    96.96 |     100 |     100
- validators.js   |     100 |    97.67 |     100 |     100
-```
+
+![Test Coverage](coverage.png)
+
+
 
 ## `PATCH /tasks/:id/assign` design decisions
 - **Empty / whitespace-only / non-string / missing assignee -> 400.** A blank string is not a person; silently accepting it would make "unassigned" ambiguous (`null` vs `""`).
